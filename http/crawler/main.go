@@ -11,7 +11,7 @@ func main() {
 	//	Scheduler:   &scheduler.SimpleScheduler{},
 	//	WorkerCount: 100,
 	//}
-	e := engine.ConcurrentEngine2{
+	e := engine.ConcurrentEngine{
 		Scheduler:   &scheduler.QueuedScheduler{},
 		WorkerCount: 100,
 	}

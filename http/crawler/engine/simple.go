@@ -7,7 +7,7 @@ import (
 
 type SimpleEngine struct{}
 
-func (e SimpleEngine) Run(seeds ...Request) {
+func (e *SimpleEngine) Run(seeds ...Request) {
 	var requests []Request
 	for _, r := range seeds {
 		requests = append(requests, r)
