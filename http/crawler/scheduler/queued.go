@@ -19,25 +19,25 @@ func (s *QueuedScheduler) Run() {
 	s.requestChan = make(chan engine.Request)
 	s.workerChan = make(chan chan engine.Request)
 	go func() {
-		var resquestQ []engine.Request
+		var requestQ []engine.Request
 		var workQ []chan engine.Request
 
 		for {
 			var activeRequest engine.Request
 			var activeWorker chan engine.Request
-			if len(resquestQ) > 0 && len(workQ) > 0 {
-				activeRequest = resquestQ[0]
+			if len(requestQ) > 0 && len(workQ) > 0 {
+				activeRequest = requestQ[0]
 				activeWorker = workQ[0]
 			}
 
 			select {
 			case r := <-s.requestChan:
-				resquestQ = append(resquestQ, r)
+				requestQ = append(requestQ, r)
 			case w := <-s.workerChan:
 				workQ = append(workQ, w)
 			case activeWorker <- activeRequest:
-				resquestQ = resquestQ[1:]
-				workQ = workQ[:1]
+				requestQ = requestQ[1:]
+				workQ = workQ[1:]
 			}
 		}
 	}()

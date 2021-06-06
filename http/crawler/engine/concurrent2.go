@@ -46,6 +46,7 @@ func createWorker2(out chan ParseResult, s Scheduler2) {
 	in := make(chan Request)
 	go func(wId int) {
 		for {
+			log.Printf("Work [%d] is Ready\n", wId)
 			s.WorkReady(in)
 			r := <-in
 			parseResult, err := worker(r, wId)
