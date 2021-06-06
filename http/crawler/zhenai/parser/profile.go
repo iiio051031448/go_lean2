@@ -11,7 +11,7 @@ import (
 var profileRe1 = regexp.MustCompile(`<td><span class="label">([^<]+)</span>([^<]+)</td>`)
 var profileRe2 = regexp.MustCompile(`<td><span class="label">([^<]+)</span><span field="">([^<]+)</span></td>`)
 
-func ParserProfile(contents []byte) engine.ParseResult {
+func ParserProfile(contents []byte, name string) engine.ParseResult {
 	//var profileMap map[string]string
 	profileMap := make(map[string]string)
 
@@ -44,7 +44,7 @@ func ParserProfile(contents []byte) engine.ParseResult {
 	}
 
 	profile := model.Profile{
-		Name:       "",
+		Name:       name,
 		Gender:     profileMap["性别："],
 		Age:        ageNum(profileMap["年龄："]),
 		Height:     hNum(profileMap["身高："]),
