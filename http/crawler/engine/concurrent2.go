@@ -2,23 +2,23 @@ package engine
 
 import "log"
 
-type ConcurrentEngine struct {
-	Scheduler   Scheduler
+type ConcurrentEngine2 struct {
+	Scheduler   Scheduler2
 	WorkerCount int
 }
 
-type Scheduler interface {
+type Scheduler2 interface {
 	Submit(Request)
-	ConfigMasterWorkerChan(chan Request)
+	WorkReady(chan Request)
+	Run()
 }
 
-func (e *ConcurrentEngine) Run(seeds ...Request) {
-	in := make(chan Request)
+func (e *ConcurrentEngine2) Run(seeds ...Request) {
 	out := make(chan ParseResult)
-	e.Scheduler.ConfigMasterWorkerChan(in)
+	e.Scheduler.Run()
 
 	for i := 0; i < e.WorkerCount; i++ {
-		createWorker(in, out)
+		createWorker2(out, e.Scheduler)
 	}
 
 	for _, r := range seeds {
@@ -39,20 +39,21 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	}
 }
 
-var workIdNext int = 0
+var workIdNext2 int = 0
 
-func createWorker(in chan Request, out chan ParseResult) {
-	workId := workIdNext2
-	workIdNext++
-	go func() {
+func createWorker2(out chan ParseResult, s Scheduler2) {
+	workIdNext2++
+	in := make(chan Request)
+	go func(wId int) {
 		for {
+			s.WorkReady(in)
 			r := <-in
-			parseResult, err := worker(r, workId)
+			parseResult, err := worker(r, wId)
 			if err != nil {
 				continue
 			}
 			out <- parseResult
 		}
-	}()
+	}(workIdNext2)
 
 }

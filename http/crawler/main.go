@@ -7,8 +7,12 @@ import (
 )
 
 func main() {
-	e := engine.ConcurrentEngine{
-		Scheduler:   &scheduler.SimpleScheduler{},
+	//e := engine.ConcurrentEngine{
+	//	Scheduler:   &scheduler.SimpleScheduler{},
+	//	WorkerCount: 100,
+	//}
+	e := engine.ConcurrentEngine2{
+		Scheduler:   &scheduler.QueuedScheduler{},
 		WorkerCount: 100,
 	}
 	e.Run(engine.Request{

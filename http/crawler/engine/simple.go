@@ -17,7 +17,7 @@ func (e SimpleEngine) Run(seeds ...Request) {
 		r := requests[0]
 		requests = requests[1:]
 
-		parseResult, err := worker(r)
+		parseResult, err := worker(r, 0)
 		if err != nil {
 			return
 		}
@@ -30,8 +30,8 @@ func (e SimpleEngine) Run(seeds ...Request) {
 	}
 }
 
-func worker(r Request) (ParseResult, error) {
-	log.Printf("Fetching : %s", r.Url)
+func worker(r Request, workId int) (ParseResult, error) {
+	log.Printf("[#%d]Fetching and parse : %s", workId, r.Url)
 	body, err := fetcher.Fetch(r.Url)
 	if err != nil {
 		log.Printf("Fetcher error: fetching url %s : %v", r.Url, err)
