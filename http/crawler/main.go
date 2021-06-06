@@ -15,7 +15,11 @@ func main() {
 		Scheduler:   &scheduler.QueuedScheduler{},
 		WorkerCount: 100,
 	}
+
+	//e.Run(engine.Request{
+	//	Url:       "http://localhost:8080/mock/www.zhenai.com/zhenghun",
+	//	ParseFunc: parser.ParseCityList})
 	e.Run(engine.Request{
-		Url:       "http://localhost:8080/mock/www.zhenai.com/zhenghun",
-		ParseFunc: parser.ParseCityList})
+		Url:       "http://localhost:8080/mock/www.zhenai.com/zhenghun/gannan",
+		ParseFunc: parser.ParseCity})
 }
