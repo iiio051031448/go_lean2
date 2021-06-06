@@ -5,7 +5,7 @@ import (
 	"stu/http/crawler/engine"
 )
 
-const cityRe = `<a href="(http://album.zhenai.com/u/[0-9]+)"[^>]*>([^<]+)</a>`
+const cityRe = `<a href="(http://localhost:8080/mock/album.zhenai.com/u/[0-9]+)"[^>]*>([^<]+)</a>`
 
 func ParseCity(contents []byte) engine.ParseResult {
 	re := regexp.MustCompile(cityRe)
