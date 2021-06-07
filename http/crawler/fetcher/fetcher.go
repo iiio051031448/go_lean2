@@ -3,6 +3,7 @@ package fetcher
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -32,13 +33,16 @@ func Fetch(url string) ([]byte, error) {
 	}
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Error: status code", resp.StatusCode)
+		if resp.StatusCode == http.StatusAccepted {
+			bytes, err := ioReader2Bytes(resp.Body)
+			if err == nil {
+				log.Printf("%s", bytes)
+			}
+		}
 		return nil, fmt.Errorf("wrong status code : %d", resp.StatusCode)
 	}
 
-	bodyReader := bufio.NewReader(resp.Body)
-	e := determineEncoding(bodyReader)
-	utf8Reader := transform.NewReader(bodyReader, e.NewDecoder())
-	return ioutil.ReadAll(utf8Reader)
+	return ioReader2Bytes(resp.Body)
 }
 
 func determineEncoding(r *bufio.Reader) encoding.Encoding {
@@ -51,4 +55,11 @@ func determineEncoding(r *bufio.Reader) encoding.Encoding {
 	e, _, _ := charset.DetermineEncoding(bytes, "")
 
 	return e
+}
+
+func ioReader2Bytes(reader io.Reader) ([]byte, error) {
+	bodyReader := bufio.NewReader(reader)
+	e := determineEncoding(bodyReader)
+	utf8Reader := transform.NewReader(bodyReader, e.NewDecoder())
+	return ioutil.ReadAll(utf8Reader)
 }
