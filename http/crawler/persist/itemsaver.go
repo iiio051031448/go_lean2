@@ -39,6 +39,7 @@ func save(id string, data string) {
 		return
 	}
 
+	//NOTE: elastic7.3 no need Type()
 	indexResp, err := client.Index().Index("data_profile").
 		Id(id).BodyString(data).Do(context.Background())
 	if err != nil {
