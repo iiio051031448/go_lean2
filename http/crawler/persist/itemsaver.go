@@ -3,8 +3,10 @@ package persist
 import (
 	"context"
 	"encoding/json"
-	"github.com/olivere/elastic/v7"
 	"log"
+	"stu/http/crawler/engine"
+
+	"github.com/olivere/elastic/v7"
 )
 
 func ItemSaver() chan interface{} {
@@ -12,24 +14,25 @@ func ItemSaver() chan interface{} {
 
 	go func() {
 		for {
-			item := <-out
-			log.Printf("ItemSaver Got item:%+v", item)
+			it := <-out
+			item := it.(engine.Item)
+			log.Printf("ItemSaver Got it:%+v", item)
 
 			data_json, err := json.Marshal(item)
 			if err != nil {
 				log.Printf("Item to JSON string failed.\n")
 				continue
 			}
-			save(string(data_json))
+			save(item.Id, string(data_json))
 		}
 	}()
 
 	return out
 }
 
-func save(data string) {
+func save(id string, data string) {
 	client, err := elastic.NewClient(
-		elastic.SetURL("http://192.168.136.128:9200"),
+		elastic.SetURL("http://192.168.162.129:9200"),
 		elastic.SetSniff(false))
 	if err != nil {
 		log.Printf("ElasticSearch Client create failed.\n")
@@ -37,8 +40,7 @@ func save(data string) {
 	}
 
 	indexResp, err := client.Index().Index("data_profile").
-		Id("").
-		BodyString(data).Do(context.Background())
+		Id(id).BodyString(data).Do(context.Background())
 	if err != nil {
 		log.Printf("save data to ElasticSearch Failed.\n")
 		return
