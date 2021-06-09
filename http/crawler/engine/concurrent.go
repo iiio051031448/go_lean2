@@ -46,9 +46,10 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 		result := <-out
 		for _, item := range result.Items {
 			//log.Printf("Got item #%d: %v", itemCount, item)
-			if result.ItemHandleFunc != nil {
-				result.ItemHandleFunc(item)
+			if item.HandleFunc != nil {
+				item.HandleFunc(item)
 			}
+
 			itemCount++
 		}
 

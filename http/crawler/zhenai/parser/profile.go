@@ -12,12 +12,12 @@ import (
 var profileRe1 = regexp.MustCompile(`<td><span class="label">([^<]+)</span>([^<]+)</td>`)
 var profileRe2 = regexp.MustCompile(`<td><span class="label">([^<]+)</span><span field="">([^<]+)</span></td>`)
 
-func ProfileHandler(item interface{}) {
-	p := item.(model.Profile)
-	log.Printf("	Got profile: %+v\n", p)
+func ProfileHandler(item engine.Item) {
+	p := item.Payload.(model.Profile)
+	log.Printf("	Got Id:%s, Url:%s, profile: %+v\n", item.Id, item.Url, p)
 }
 
-func ParserProfile(contents []byte, name string) engine.ParseResult {
+func ParserProfile(contents []byte, id, url, name string) engine.ParseResult {
 	//var profileMap map[string]string
 	profileMap := make(map[string]string)
 
@@ -65,5 +65,9 @@ func ParserProfile(contents []byte, name string) engine.ParseResult {
 		Car:        profileMap["是否购车："],
 	}
 
-	return engine.ParseResult{Items: []interface{}{profile}, ItemHandleFunc: ProfileHandler}
+	return engine.ParseResult{Items: []engine.Item{{
+		Id:      id,
+		Url:     url,
+		Payload: profile, HandleFunc: ProfileHandler,
+	}}}
 }
