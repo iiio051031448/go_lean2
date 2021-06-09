@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"log"
 	"regexp"
 	"stu/http/crawler/engine"
 )
@@ -25,12 +26,13 @@ func ParseCity(contents []byte) engine.ParseResult {
 
 	matchs = cityPageRe.FindAllSubmatch(contents, -1)
 	for _, m := range matchs {
-		name := string(m[2])
-		result.Items = append(result.Items, name)
-		result.Requests = append(result.Requests, engine.Request{
-			Url:       string(m[1]),
-			ParseFunc: ParseCity,
-		})
+		//name := string(m[2])
+		//result.Items = append(result.Items, name)
+		//result.Requests = append(result.Requests, engine.Request{
+		//	Url:       string(m[1]),
+		//	ParseFunc: ParseCity,
+		//})
+		log.Printf("P:%s\n", m[1])
 	}
 
 	return result
