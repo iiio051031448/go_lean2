@@ -71,6 +71,6 @@ func ParserProfile(contents []byte, id, url, name string) engine.ParseResult {
 	return engine.ParseResult{Items: []engine.Item{{
 		Id:      id,
 		Url:     url,
-		Payload: profile, SaveFunc: ProfileItemSaver,
-	}}}
+		Payload: profile,
+	}}, SaveFunc: ProfileItemSaver}
 }

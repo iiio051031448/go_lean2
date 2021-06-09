@@ -8,13 +8,13 @@ type Request struct {
 type ParseResult struct {
 	Requests []Request
 	Items    []Item
+	SaveFunc func(item Item, saver chan interface{})
 }
 
 type Item struct {
-	Id       string
-	Url      string
-	Payload  interface{}
-	SaveFunc func(item Item, saver chan interface{})
+	Id      string
+	Url     string
+	Payload interface{}
 }
 
 func NilParse([]byte) ParseResult {
