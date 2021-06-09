@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"log"
 	"regexp"
 	"strconv"
 	"stu/http/crawler/engine"
@@ -10,6 +11,11 @@ import (
 //var genderRe = regexp.MustCompile(`<span class="label">([^<]+)</span><span field="">([^>]+)</span>`)
 var profileRe1 = regexp.MustCompile(`<td><span class="label">([^<]+)</span>([^<]+)</td>`)
 var profileRe2 = regexp.MustCompile(`<td><span class="label">([^<]+)</span><span field="">([^<]+)</span></td>`)
+
+func ProfileHandler(item interface{}) {
+	p := item.(model.Profile)
+	log.Printf("	Got profile: %+v\n", p)
+}
 
 func ParserProfile(contents []byte, name string) engine.ParseResult {
 	//var profileMap map[string]string
@@ -59,5 +65,5 @@ func ParserProfile(contents []byte, name string) engine.ParseResult {
 		Car:        profileMap["是否购车："],
 	}
 
-	return engine.ParseResult{Items: []interface{}{profile}}
+	return engine.ParseResult{Items: []interface{}{profile}, ItemHandleFunc: ProfileHandler}
 }

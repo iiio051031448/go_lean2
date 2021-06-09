@@ -18,6 +18,17 @@ type ReadyNotifier interface {
 	WorkReady(chan Request)
 }
 
+var visitedUrls = make(map[string]bool)
+
+func isDuplicate(r Request) bool {
+	if visitedUrls[r.Url] {
+		return true
+	}
+
+	visitedUrls[r.Url] = true
+	return false
+}
+
 func (e *ConcurrentEngine) Run(seeds ...Request) {
 	out := make(chan ParseResult)
 	e.Scheduler.Run()
@@ -34,11 +45,18 @@ func (e *ConcurrentEngine) Run(seeds ...Request) {
 	for {
 		result := <-out
 		for _, item := range result.Items {
-			log.Printf("Got item #%d: %v", itemCount, item)
+			//log.Printf("Got item #%d: %v", itemCount, item)
+			if result.ItemHandleFunc != nil {
+				result.ItemHandleFunc(item)
+			}
 			itemCount++
 		}
 
 		for _, nr := range result.Requests {
+			if isDuplicate(nr) {
+				log.Printf("Duplicate request: %s\n", nr.Url)
+				continue
+			}
 			e.Scheduler.Submit(nr)
 		}
 	}
