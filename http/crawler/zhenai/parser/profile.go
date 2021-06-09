@@ -12,9 +12,12 @@ import (
 var profileRe1 = regexp.MustCompile(`<td><span class="label">([^<]+)</span>([^<]+)</td>`)
 var profileRe2 = regexp.MustCompile(`<td><span class="label">([^<]+)</span><span field="">([^<]+)</span></td>`)
 
-func ProfileHandler(item engine.Item) {
+func ProfileItemSaver(item engine.Item, saver chan interface{}) {
 	p := item.Payload.(model.Profile)
 	log.Printf("	Got Id:%s, Url:%s, profile: %+v\n", item.Id, item.Url, p)
+	go func() {
+		saver <- item
+	}()
 }
 
 func ParserProfile(contents []byte, id, url, name string) engine.ParseResult {
@@ -68,6 +71,6 @@ func ParserProfile(contents []byte, id, url, name string) engine.ParseResult {
 	return engine.ParseResult{Items: []engine.Item{{
 		Id:      id,
 		Url:     url,
-		Payload: profile, HandleFunc: ProfileHandler,
+		Payload: profile, SaveFunc: ProfileItemSaver,
 	}}}
 }

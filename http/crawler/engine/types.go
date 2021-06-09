@@ -11,10 +11,10 @@ type ParseResult struct {
 }
 
 type Item struct {
-	Id         string
-	Url        string
-	Payload    interface{}
-	HandleFunc func(item Item)
+	Id       string
+	Url      string
+	Payload  interface{}
+	SaveFunc func(item Item, saver chan interface{})
 }
 
 func NilParse([]byte) ParseResult {
