@@ -10,8 +10,8 @@ type Profile struct {
 	Marriage   string
 	Education  string
 	Occupation string
-	HuKou      string
-	Xinzou     string
+	Hukou      string
+	Xingzuo    string
 	House      string
 	Car        string
 }

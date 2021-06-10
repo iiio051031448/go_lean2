@@ -32,7 +32,7 @@ func ItemSaver() chan interface{} {
 
 func save(id string, data string) {
 	client, err := elastic.NewClient(
-		elastic.SetURL("http://192.168.162.129:9200"),
+		elastic.SetURL("http://192.168.136.128:9200"),
 		elastic.SetSniff(false))
 	if err != nil {
 		log.Printf("ElasticSearch Client create failed.\n")

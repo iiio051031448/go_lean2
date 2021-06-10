@@ -62,8 +62,8 @@ func ParserProfile(contents []byte, id, url, name string) engine.ParseResult {
 		Marriage:   profileMap["婚况："],
 		Education:  profileMap["性别："],
 		Occupation: profileMap["学历："],
-		HuKou:      profileMap["籍贯："],
-		Xinzou:     profileMap["星座："],
+		Hukou:      profileMap["籍贯："],
+		Xingzuo:    profileMap["星座："],
 		House:      profileMap["住房条件："],
 		Car:        profileMap["是否购车："],
 	}
